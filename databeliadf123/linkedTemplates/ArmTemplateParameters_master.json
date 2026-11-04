@@ -23,6 +23,15 @@
 		"PostgreSql1_properties_typeProperties_username": {
 			"value": "neondb_owner"
 		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "miraecapital.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "sqldb12345"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "sqladmin"
+		},
 		"containerUri": {
 			"value": ""
 		},
