@@ -530,6 +530,84 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Landing_to_Bronze",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "source_to_landing_injestion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/tapkeersagar@gmail.com/care_sync_repo/care_sync_databricks/Landing_to_bronze",
+							"baseParameters": {
+								"landing_timestamp": {
+									"value": "@variables('Start-Time')",
+									"type": "Expression"
+								},
+								"table_name": {
+									"value": "@activity('Read_table_details').output.firstRow.bronze_table_name",
+									"type": "Expression"
+								},
+								"source_system": {
+									"value": "@activity('Read_table_details').output.firstRow.source_system",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Bronze_to_silver",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Landing_to_Bronze",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/tapkeersagar@gmail.com/care_sync_repo/care_sync_databricks/bronze_to_silver",
+							"baseParameters": {
+								"landing_timestamp": {
+									"value": "@variables('Start-Time')",
+									"type": "Expression"
+								},
+								"Table Name": {
+									"value": "@activity('Read_table_details').output.firstRow.source_table_name",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureDatabricks1",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -551,7 +629,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
 				"[concat(variables('factoryId'), '/datasets/PostgreSqlTable1')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/Parquet1')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricks1')]"
 			]
 		}
 	]
